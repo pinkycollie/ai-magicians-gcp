@@ -1,5 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Agent configurations
@@ -184,256 +182,372 @@ Your expertise includes:
   }
 };
 
-// Main App Component
-function App() {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedAgent, setSelectedAgent] = useState('career-matching');
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
-  const genAI = useRef(null);
+// Application State
+let state = {
+  activeTab: 'overview',
+  selectedAgent: 'career-matching',
+  messages: [],
+  isLoading: false,
+  genAI: null,
+  chat: null
+};
 
-  useEffect(() => {
-    // Initialize Gemini AI with the placeholder API key
-    // In AI Studio, this will be automatically replaced with the user's API key
-    const apiKey = process.env.GEMINI_API_KEY || 'YOUR_API_KEY_HERE';
-    genAI.current = new GoogleGenerativeAI(apiKey);
-  }, []);
+// Initialize Gemini AI
+function initializeAI() {
+  // In AI Studio, this will be automatically replaced with the user's API key
+  const apiKey = process.env.GEMINI_API_KEY || 'YOUR_API_KEY_HERE';
+  state.genAI = new GoogleGenerativeAI(apiKey);
+}
 
-  useEffect(() => {
-    // Scroll to bottom when messages change
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+// Get agent configuration by ID
+function getAgentConfig(agentId) {
+  for (const category of Object.values(AGENT_CATEGORIES)) {
+    const agent = category.agents.find(a => a.id === agentId);
+    if (agent) return agent;
+  }
+  return AGENT_CATEGORIES['job-agents'].agents[0];
+}
 
-  const getAgentConfig = (agentId) => {
-    for (const category of Object.values(AGENT_CATEGORIES)) {
-      const agent = category.agents.find(a => a.id === agentId);
-      if (agent) return agent;
+// Create element helper
+function createElement(tag, attributes = {}, ...children) {
+  const element = document.createElement(tag);
+  
+  for (const [key, value] of Object.entries(attributes)) {
+    if (key === 'className') {
+      element.className = value;
+    } else if (key === 'style' && typeof value === 'object') {
+      Object.assign(element.style, value);
+    } else if (key.startsWith('on') && typeof value === 'function') {
+      const eventName = key.substring(2).toLowerCase();
+      element.addEventListener(eventName, value);
+    } else {
+      element.setAttribute(key, value);
     }
-    return AGENT_CATEGORIES['job-agents'].agents[0];
-  };
+  }
+  
+  for (const child of children) {
+    if (typeof child === 'string') {
+      element.appendChild(document.createTextNode(child));
+    } else if (child instanceof Node) {
+      element.appendChild(child);
+    }
+  }
+  
+  return element;
+}
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+// Render Overview Tab
+function renderOverview() {
+  const container = createElement('div');
+  
+  // Header
+  const header = createElement('div', { className: 'header' },
+    createElement('h1', {}, '🧠 360 MAGICIANS'),
+    createElement('p', {}, 'VERTICAL AI Platform - Federated AI Workers'),
+    createElement('p', { style: { fontSize: '1rem', color: '#888' } },
+      'Making every digital experience accessible to 70+ million deaf people worldwide'
+    ),
+    createElement('div', { style: { marginTop: '20px' } },
+      createElement('span', { className: 'badge badge-primary' }, '🤖 VURA AI: vr4deaf.org (VR/AR + ASL)'),
+      createElement('span', { className: 'badge badge-primary' }, '🧠 Vertex AI: GCP Federated Workers')
+    )
+  );
+  
+  // Stats
+  const stats = createElement('div', { className: 'stats' },
+    createElement('div', { className: 'stat-card' },
+      createElement('div', { className: 'stat-value' }, '70M+'),
+      createElement('div', { className: 'stat-label' }, 'Deaf People Worldwide')
+    ),
+    createElement('div', { className: 'stat-card' },
+      createElement('div', { className: 'stat-value' }, '$26.2B'),
+      createElement('div', { className: 'stat-label' }, 'Market Opportunity')
+    ),
+    createElement('div', { className: 'stat-card' },
+      createElement('div', { className: 'stat-value' }, '12'),
+      createElement('div', { className: 'stat-label' }, 'Federated AI Agents')
+    ),
+    createElement('div', { className: 'stat-card' },
+      createElement('div', { className: 'stat-value' }, '6'),
+      createElement('div', { className: 'stat-label' }, 'Industry Verticals')
+    )
+  );
+  
+  container.appendChild(header);
+  container.appendChild(stats);
+  
+  // Agent Categories
+  const agentsSection = createElement('div', { style: { marginTop: '30px' } },
+    createElement('h2', { style: { marginBottom: '20px', color: '#333' } }, 'AI Agent Categories')
+  );
+  
+  for (const [key, category] of Object.entries(AGENT_CATEGORIES)) {
+    const categorySection = createElement('div', { style: { marginBottom: '30px' } },
+      createElement('h3', { style: { color: '#667eea', marginBottom: '15px' } }, category.title)
+    );
+    
+    const agentGrid = createElement('div', { className: 'agent-grid' });
+    
+    for (const agent of category.agents) {
+      const agentCard = createElement('div', {
+        className: `agent-card ${state.selectedAgent === agent.id ? 'selected' : ''}`,
+        onClick: () => {
+          state.selectedAgent = agent.id;
+          state.activeTab = 'chat';
+          render();
+        }
+      },
+        createElement('div', { className: 'agent-name' }, agent.name),
+        createElement('div', { className: 'agent-description' }, agent.description)
+      );
+      agentGrid.appendChild(agentCard);
+    }
+    
+    categorySection.appendChild(agentGrid);
+    agentsSection.appendChild(categorySection);
+  }
+  
+  container.appendChild(agentsSection);
+  return container;
+}
 
-    const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
+// Render Chat Tab
+function renderChat() {
+  const agentConfig = getAgentConfig(state.selectedAgent);
+  const container = createElement('div');
+  
+  const title = createElement('h2', 
+    { style: { marginBottom: '20px', color: '#333' } },
+    `Chat with ${agentConfig.name}`
+  );
+  container.appendChild(title);
+  
+  const chatContainer = createElement('div', { className: 'chat-container' });
+  
+  // Agent Selector
+  const agentSelector = createElement('div', { className: 'agent-selector' },
+    createElement('h3', 
+      { style: { marginBottom: '15px', fontSize: '1rem', color: '#333' } },
+      'Select Agent'
+    )
+  );
+  
+  for (const [key, category] of Object.entries(AGENT_CATEGORIES)) {
+    const categorySection = createElement('div', { style: { marginBottom: '20px' } },
+      createElement('h4', 
+        { style: { fontSize: '0.85rem', color: '#666', marginBottom: '10px' } },
+        category.title
+      )
+    );
+    
+    for (const agent of category.agents) {
+      const agentButton = createElement('div', {
+        style: {
+          padding: '10px',
+          marginBottom: '8px',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          background: state.selectedAgent === agent.id ? '#667eea' : '#fff',
+          color: state.selectedAgent === agent.id ? '#fff' : '#333',
+          fontSize: '0.85rem',
+          transition: 'all 0.3s'
+        },
+        onClick: () => {
+          state.selectedAgent = agent.id;
+          state.messages = [];
+          state.chat = null;
+          render();
+        }
+      }, agent.name);
+      
+      categorySection.appendChild(agentButton);
+    }
+    
+    agentSelector.appendChild(categorySection);
+  }
+  
+  chatContainer.appendChild(agentSelector);
+  
+  // Chat Interface
+  const chatInterface = createElement('div', { className: 'chat-interface' });
+  
+  // Messages Area
+  const messagesArea = createElement('div', { className: 'chat-messages', id: 'chat-messages' });
+  
+  if (state.messages.length === 0) {
+    const emptyState = createElement('div', 
+      { style: { textAlign: 'center', color: '#999', padding: '40px' } },
+      createElement('p', {}, `Start a conversation with ${agentConfig.name}`),
+      createElement('p', 
+        { style: { fontSize: '0.9rem', marginTop: '10px' } },
+        agentConfig.description
+      )
+    );
+    messagesArea.appendChild(emptyState);
+  } else {
+    for (const message of state.messages) {
+      const messageDiv = createElement('div', { className: `message ${message.role}` }, message.content);
+      messagesArea.appendChild(messageDiv);
+    }
+  }
+  
+  if (state.isLoading) {
+    const loadingDiv = createElement('div', { className: 'message assistant' },
+      createElement('div', { className: 'loading' }),
+      createElement('span', { style: { marginLeft: '10px' } }, 'Thinking...')
+    );
+    messagesArea.appendChild(loadingDiv);
+  }
+  
+  chatInterface.appendChild(messagesArea);
+  
+  // Input Area
+  const inputForm = createElement('form', {
+    className: 'chat-input-container',
+    onSubmit: async (e) => {
+      e.preventDefault();
+      await handleSendMessage();
+    }
+  });
+  
+  const input = createElement('input', {
+    type: 'text',
+    className: 'chat-input',
+    id: 'chat-input',
+    placeholder: 'Type your message...',
+    disabled: state.isLoading
+  });
+  
+  const sendButton = createElement('button', {
+    type: 'submit',
+    className: 'send-button',
+    disabled: state.isLoading
+  }, state.isLoading ? 'Sending...' : 'Send');
+  
+  inputForm.appendChild(input);
+  inputForm.appendChild(sendButton);
+  chatInterface.appendChild(inputForm);
+  
+  chatContainer.appendChild(chatInterface);
+  container.appendChild(chatContainer);
+  
+  return container;
+}
 
-    try {
-      const agentConfig = getAgentConfig(selectedAgent);
-      const model = genAI.current.getGenerativeModel({ 
+// Handle Send Message
+async function handleSendMessage() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  
+  if (!message || state.isLoading) return;
+  
+  // Add user message
+  state.messages.push({ role: 'user', content: message });
+  input.value = '';
+  state.isLoading = true;
+  render();
+  
+  try {
+    const agentConfig = getAgentConfig(state.selectedAgent);
+    
+    // Initialize model if needed
+    if (!state.chat) {
+      const model = state.genAI.getGenerativeModel({ 
         model: 'gemini-pro',
         systemInstruction: agentConfig.systemPrompt
       });
-
-      // Build conversation history
-      const history = messages.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      }));
-
-      const chat = model.startChat({ history });
-      const result = await chat.sendMessage(input);
-      const response = await result.response;
-      const text = response.text();
-
-      setMessages(prev => [...prev, { role: 'assistant', content: text }]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setMessages(prev => [...prev, { 
-        role: 'error', 
-        content: `Error: ${error.message}. Please make sure you have set up your Gemini API key.` 
-      }]);
-    } finally {
-      setIsLoading(false);
+      state.chat = model.startChat({
+        history: [],
+        generationConfig: {
+          maxOutputTokens: 1000,
+        },
+      });
     }
-  };
-
-  const renderOverview = () => (
-    <div>
-      <div className="header">
-        <h1>🧠 360 MAGICIANS</h1>
-        <p>VERTICAL AI Platform - Federated AI Workers</p>
-        <p style={{ fontSize: '1rem', color: '#888' }}>
-          Making every digital experience accessible to 70+ million deaf people worldwide
-        </p>
-        <div style={{ marginTop: '20px' }}>
-          <span className="badge badge-primary">🤖 VURA AI: vr4deaf.org (VR/AR + ASL)</span>
-          <span className="badge badge-primary">🧠 Vertex AI: GCP Federated Workers</span>
-        </div>
-      </div>
-
-      <div className="stats">
-        <div className="stat-card">
-          <div className="stat-value">70M+</div>
-          <div className="stat-label">Deaf People Worldwide</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">$26.2B</div>
-          <div className="stat-label">Market Opportunity</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">12</div>
-          <div className="stat-label">Federated AI Agents</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">6</div>
-          <div className="stat-label">Industry Verticals</div>
-        </div>
-      </div>
-
-      <div style={{ marginTop: '30px' }}>
-        <h2 style={{ marginBottom: '20px', color: '#333' }}>AI Agent Categories</h2>
-        {Object.entries(AGENT_CATEGORIES).map(([key, category]) => (
-          <div key={key} style={{ marginBottom: '30px' }}>
-            <h3 style={{ color: '#667eea', marginBottom: '15px' }}>{category.title}</h3>
-            <div className="agent-grid">
-              {category.agents.map(agent => (
-                <div
-                  key={agent.id}
-                  className={`agent-card ${selectedAgent === agent.id ? 'selected' : ''}`}
-                  onClick={() => {
-                    setSelectedAgent(agent.id);
-                    setActiveTab('chat');
-                  }}
-                >
-                  <div className="agent-name">{agent.name}</div>
-                  <div className="agent-description">{agent.description}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderChat = () => {
-    const agentConfig = getAgentConfig(selectedAgent);
     
-    return (
-      <div>
-        <h2 style={{ marginBottom: '20px', color: '#333' }}>
-          Chat with {agentConfig.name}
-        </h2>
-        <div className="chat-container">
-          <div className="agent-selector">
-            <h3 style={{ marginBottom: '15px', fontSize: '1rem', color: '#333' }}>Select Agent</h3>
-            {Object.entries(AGENT_CATEGORIES).map(([key, category]) => (
-              <div key={key} style={{ marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '0.85rem', color: '#666', marginBottom: '10px' }}>
-                  {category.title}
-                </h4>
-                {category.agents.map(agent => (
-                  <div
-                    key={agent.id}
-                    onClick={() => {
-                      setSelectedAgent(agent.id);
-                      setMessages([]);
-                    }}
-                    style={{
-                      padding: '10px',
-                      marginBottom: '8px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      background: selectedAgent === agent.id ? '#667eea' : '#fff',
-                      color: selectedAgent === agent.id ? '#fff' : '#333',
-                      fontSize: '0.85rem',
-                      transition: 'all 0.3s'
-                    }}
-                  >
-                    {agent.name}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <div className="chat-interface">
-            <div className="chat-messages">
-              {messages.length === 0 && (
-                <div style={{ textAlign: 'center', color: '#999', padding: '40px' }}>
-                  <p>Start a conversation with {agentConfig.name}</p>
-                  <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>
-                    {agentConfig.description}
-                  </p>
-                </div>
-              )}
-              {messages.map((message, index) => (
-                <div key={index} className={`message ${message.role}`}>
-                  {message.content}
-                </div>
-              ))}
-              {isLoading && (
-                <div className="message assistant">
-                  <div className="loading"></div>
-                  <span style={{ marginLeft: '10px' }}>Thinking...</span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <form onSubmit={handleSendMessage} className="chat-input-container">
-              <input
-                type="text"
-                className="chat-input"
-                placeholder="Type your message..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={isLoading}
-              />
-              <button
-                type="submit"
-                className="send-button"
-                disabled={isLoading || !input.trim()}
-              >
-                {isLoading ? 'Sending...' : 'Send'}
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="container">
-      <div className="tabs">
-        <div className="tab-list">
-          <button
-            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            Overview
-          </button>
-          <button
-            className={`tab-button ${activeTab === 'chat' ? 'active' : ''}`}
-            onClick={() => setActiveTab('chat')}
-          >
-            Interactive Chat
-          </button>
-        </div>
-
-        <div className="tab-content">
-          {activeTab === 'overview' && renderOverview()}
-          {activeTab === 'chat' && renderChat()}
-        </div>
-      </div>
-
-      <div style={{ marginTop: '40px', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>
-        <p>© 2025 360 Magicians | Powered by Gemini AI</p>
-        <p style={{ marginTop: '5px' }}>
-          🌟 VERTICAL AI Platform - Universal Digital Accessibility Infrastructure
-        </p>
-      </div>
-    </div>
-  );
+    // Send message and get response
+    const result = await state.chat.sendMessage(message);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Add assistant message
+    state.messages.push({ role: 'assistant', content: text });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    state.messages.push({ 
+      role: 'error', 
+      content: `Error: ${error.message}. Please make sure you have set up your Gemini API key.` 
+    });
+  } finally {
+    state.isLoading = false;
+    render();
+    
+    // Scroll to bottom
+    setTimeout(() => {
+      const messagesArea = document.getElementById('chat-messages');
+      if (messagesArea) {
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+      }
+    }, 100);
+  }
 }
 
-// Render the app
-const root = createRoot(document.getElementById('root'));
-root.render(<App />);
+// Main Render Function
+function render() {
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+  
+  const container = createElement('div', { className: 'container' });
+  
+  // Tabs
+  const tabs = createElement('div', { className: 'tabs' });
+  
+  // Tab List
+  const tabList = createElement('div', { className: 'tab-list' },
+    createElement('button', {
+      className: `tab-button ${state.activeTab === 'overview' ? 'active' : ''}`,
+      onClick: () => {
+        state.activeTab = 'overview';
+        render();
+      }
+    }, 'Overview'),
+    createElement('button', {
+      className: `tab-button ${state.activeTab === 'chat' ? 'active' : ''}`,
+      onClick: () => {
+        state.activeTab = 'chat';
+        render();
+      }
+    }, 'Interactive Chat')
+  );
+  
+  tabs.appendChild(tabList);
+  
+  // Tab Content
+  const tabContent = createElement('div', { className: 'tab-content' });
+  if (state.activeTab === 'overview') {
+    tabContent.appendChild(renderOverview());
+  } else if (state.activeTab === 'chat') {
+    tabContent.appendChild(renderChat());
+  }
+  
+  tabs.appendChild(tabContent);
+  container.appendChild(tabs);
+  
+  // Footer
+  const footer = createElement('div', 
+    { style: { marginTop: '40px', textAlign: 'center', color: '#666', fontSize: '0.9rem' } },
+    createElement('p', {}, '© 2025 360 Magicians | Powered by Gemini AI'),
+    createElement('p', 
+      { style: { marginTop: '5px' } },
+      '🌟 VERTICAL AI Platform - Universal Digital Accessibility Infrastructure'
+    )
+  );
+  
+  container.appendChild(footer);
+  root.appendChild(container);
+}
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', () => {
+  initializeAI();
+  render();
+});
