@@ -7,8 +7,8 @@ This app is now compatible with Google AI Studio (Gemini SDK).
 This application is designed to run in Google AI Studio with the following structure:
 
 ### Files
-- `index.html` - Main HTML file with import map for ES modules
-- `app.js` - React application with Gemini AI integration
+- `index.html` - Main HTML file with import map for ES modules and embedded CSS
+- `app.js` - Vanilla JavaScript application with Gemini AI integration
 - `metadata.json` - App configuration for AI Studio
 
 ### Key Features
@@ -65,9 +65,9 @@ If you want to test locally:
 
 ### Dependencies
 All dependencies are loaded via CDN using import maps:
-- React 18.2.0
-- React DOM 18.2.0
-- @google/generative-ai 0.2.1
+- @google/generative-ai 0.2.1 (Gemini SDK)
+
+No framework dependencies required - pure vanilla JavaScript!
 
 ### API Key Security
 - Uses placeholder `process.env.GEMINI_API_KEY`
@@ -98,8 +98,8 @@ When you share this app in AI Studio:
 
 ### Why Not Next.js?
 AI Studio doesn't support Next.js compiler or other complex build tools. This version uses:
-- Vanilla HTML/CSS/JavaScript
-- React via ES modules
+- Vanilla HTML/CSS/JavaScript (no frameworks)
+- Pure ES modules
 - Direct Gemini SDK integration
 - No build step required
 
