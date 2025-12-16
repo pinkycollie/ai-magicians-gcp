@@ -1,0 +1,10 @@
+{
+  "name": "360 Magicians - Vertical AI Platform",
+  "description": "Federated AI workers serving 70+ million deaf people across every digital platform. Featuring specialized AI agents for career matching, VR coordination, business development, and accessibility services.",
+  "author": "360 Magicians",
+  "version": "1.0.0",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
