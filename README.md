@@ -140,6 +140,7 @@ The original Next.js implementation is preserved in the `app/`, `components/`, a
 
 - **GitHub Pages** - [Visual documentation and architecture diagrams](https://pinkycollie.github.io/ai-magicians-gcp/)
 - **`AI_STUDIO_README.md`** - Complete AI Studio setup guide
+- **`GITHUB_PAGES_SETUP.md`** - GitHub Pages configuration and deployment guide
 - **`metadata.json`** - App metadata and permissions
 - **`/docs`** - GitHub Pages source files
 
