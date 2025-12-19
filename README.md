@@ -2,6 +2,9 @@
 
 [![Google AI Studio Compatible](https://img.shields.io/badge/Google%20AI%20Studio-Compatible-4285F4?style=for-the-badge&logo=google)](https://aistudio.google.com/)
 [![Powered by Gemini](https://img.shields.io/badge/Powered%20by-Gemini%20AI-8E75B2?style=for-the-badge)](https://ai.google.dev/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-222222?style=for-the-badge&logo=github)](https://pinkycollie.github.io/ai-magicians-gcp/)
+
+📄 **[View Documentation](https://pinkycollie.github.io/ai-magicians-gcp/)** | 🏗️ **[Architecture Diagrams](https://pinkycollie.github.io/ai-magicians-gcp/architecture.html)**
 
 ## Overview
 
@@ -107,7 +110,15 @@ The original Next.js implementation is preserved in the `app/`, `components/`, a
 
 ## Deployment Options
 
-### AI Studio (Recommended)
+### GitHub Pages (Documentation)
+- **Live Documentation:** [https://pinkycollie.github.io/ai-magicians-gcp/](https://pinkycollie.github.io/ai-magicians-gcp/)
+- **Architecture Diagrams:** [https://pinkycollie.github.io/ai-magicians-gcp/architecture.html](https://pinkycollie.github.io/ai-magicians-gcp/architecture.html)
+- Visual diagrams with Mermaid.js
+- Accessibility features (vibration API, high contrast, font size controls)
+- Automatic deployment via GitHub Actions
+- Hosted from `/docs` directory
+
+### AI Studio (Recommended for App)
 - Share directly in AI Studio
 - Users run with their own API keys
 - No infrastructure needed
@@ -127,8 +138,11 @@ The original Next.js implementation is preserved in the `app/`, `components/`, a
 
 ## Documentation
 
+- **GitHub Pages** - [Visual documentation and architecture diagrams](https://pinkycollie.github.io/ai-magicians-gcp/)
 - **`AI_STUDIO_README.md`** - Complete AI Studio setup guide
+- **`GITHUB_PAGES_SETUP.md`** - GitHub Pages configuration and deployment guide
 - **`metadata.json`** - App metadata and permissions
+- **`/docs`** - GitHub Pages source files
 
 ## Support & Contact
 
