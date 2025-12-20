@@ -2,10 +2,11 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
+import SignerPanel from '@/sign-visual/components/SignerPanel'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: '360 Magicians - Sign Visual AI Platform',
+  description: 'Accessible AI platform with sign language as primary interface',
   generator: 'v0.dev',
 }
 
@@ -25,7 +26,10 @@ html {
 }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SignerPanel defaultDocked={true} defaultSize="medium" />
+      </body>
     </html>
   )
 }

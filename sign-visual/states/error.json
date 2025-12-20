@@ -1,0 +1,14 @@
+{
+  "state": "error",
+  "visual": {
+    "animation": "alert-stop",
+    "motion": "hands-cross-stop",
+    "intensity": "high"
+  },
+  "semantics": {
+    "meaning": "problem-error",
+    "gesture": "crossed-arms-stop",
+    "expression": "concerned-alert"
+  },
+  "description": "System has encountered an error"
+}

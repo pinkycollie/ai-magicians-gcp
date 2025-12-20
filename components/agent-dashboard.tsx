@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Activity, CheckCircle, Clock, AlertCircle } from "lucide-react"
+import { stateMachine } from "@/sign-visual/engine/stateMachine"
+import { useEffect } from "react"
 
 interface Agent {
   id: string
@@ -26,6 +28,39 @@ interface AgentDashboardProps {
 }
 
 export default function AgentDashboard({ agentCategories, selectedAgent, onAgentSelect }: AgentDashboardProps) {
+  // Emit idle state when dashboard is loaded
+  useEffect(() => {
+    stateMachine.emit({
+      actor: "System",
+      state: "idle",
+      requiresUser: false,
+      message: "Dashboard ready - select an agent",
+    })
+  }, [])
+
+  const handleAgentSelect = (agentId: string) => {
+    // Emit deciding state when selecting agent
+    stateMachine.emit({
+      actor: "User",
+      state: "deciding",
+      confidence: 0.9,
+      requiresUser: false,
+      message: "Selecting agent...",
+    })
+
+    onAgentSelect(agentId)
+
+    // Emit completed state after selection
+    setTimeout(() => {
+      stateMachine.emit({
+        actor: "System",
+        state: "completed",
+        confidence: 1.0,
+        requiresUser: false,
+        message: "Agent selected successfully",
+      })
+    }, 300)
+  }
   const getAgentStatus = (agentId: string) => {
     // Simulate different agent statuses
     const statuses = ["active", "training", "idle", "maintenance"]
@@ -112,7 +147,7 @@ export default function AgentDashboard({ agentCategories, selectedAgent, onAgent
                   className={`cursor-pointer transition-all hover:shadow-lg ${
                     selectedAgent === agent.id ? "ring-2 ring-blue-500" : ""
                   }`}
-                  onClick={() => onAgentSelect(agent.id)}
+                  onClick={() => handleAgentSelect(agent.id)}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">

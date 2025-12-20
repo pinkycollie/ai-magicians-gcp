@@ -1,0 +1,91 @@
+{
+  "mappings": {
+    "initializing": {
+      "semantic": "starting-up",
+      "gesture": "awakening-ready",
+      "state": "idle"
+    },
+    "receiving_input": {
+      "semantic": "listening-attentive",
+      "gesture": "ears-open-receiving",
+      "state": "listening"
+    },
+    "analyzing": {
+      "semantic": "thinking-processing",
+      "gesture": "mind-working",
+      "state": "processing"
+    },
+    "verifying": {
+      "semantic": "checking-validating",
+      "gesture": "inspection-careful",
+      "state": "validating"
+    },
+    "choosing": {
+      "semantic": "selecting-option",
+      "gesture": "weighing-choices",
+      "state": "deciding"
+    },
+    "taking_action": {
+      "semantic": "doing-now",
+      "gesture": "action-motion",
+      "state": "executing"
+    },
+    "fetching_data": {
+      "semantic": "retrieving-information",
+      "gesture": "gathering-pulling",
+      "state": "executing"
+    },
+    "saving_data": {
+      "semantic": "storing-preserving",
+      "gesture": "placing-securing",
+      "state": "executing"
+    },
+    "success": {
+      "semantic": "done-success",
+      "gesture": "finished-good",
+      "state": "completed"
+    },
+    "waiting_for_user": {
+      "semantic": "need-your-input",
+      "gesture": "pointing-to-you-waiting",
+      "state": "completed"
+    },
+    "error_occurred": {
+      "semantic": "problem-stop",
+      "gesture": "alert-warning",
+      "state": "error"
+    },
+    "validation_failed": {
+      "semantic": "not-correct-reject",
+      "gesture": "shaking-head-no",
+      "state": "error"
+    },
+    "warning": {
+      "semantic": "caution-careful",
+      "gesture": "warning-attention",
+      "state": "warning"
+    }
+  },
+  "actors": {
+    "MagicianCore": {
+      "description": "Primary AI agent coordinator",
+      "visual_identity": "central-authority"
+    },
+    "Validator": {
+      "description": "Validation and verification system",
+      "visual_identity": "careful-checker"
+    },
+    "Compliance": {
+      "description": "Compliance and safety checks",
+      "visual_identity": "cautious-guardian"
+    },
+    "User": {
+      "description": "Human user interaction",
+      "visual_identity": "participant"
+    },
+    "System": {
+      "description": "System-level operations",
+      "visual_identity": "infrastructure"
+    }
+  }
+}

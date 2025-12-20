@@ -1,0 +1,14 @@
+{
+  "state": "deciding",
+  "visual": {
+    "animation": "deliberation",
+    "motion": "hands-weighing-options",
+    "intensity": "high"
+  },
+  "semantics": {
+    "meaning": "choosing-evaluating",
+    "gesture": "hands-comparing-options",
+    "expression": "thoughtful-careful"
+  },
+  "description": "System is making a decision"
+}
