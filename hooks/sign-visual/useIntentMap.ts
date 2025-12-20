@@ -5,7 +5,6 @@
 
 "use client"
 
-import { useState, useEffect } from "react";
 import intentMap from "@/sign-visual/semantics/intent.map.json";
 import systemMap from "@/sign-visual/semantics/system.map.json";
 
@@ -17,22 +16,18 @@ export interface IntentMapping {
 }
 
 export function useIntentMap() {
-  const [intentMappings] = useState(intentMap.mappings);
-  const [systemMappings] = useState(systemMap.mappings);
-  const [confidenceLevels] = useState(intentMap.confidence_levels);
-
   const getIntentMapping = (intent: string): IntentMapping | null => {
-    const mapping = intentMappings[intent as keyof typeof intentMappings];
+    const mapping = intentMap.mappings[intent as keyof typeof intentMap.mappings];
     return mapping || null;
   };
 
   const getSystemMapping = (action: string): IntentMapping | null => {
-    const mapping = systemMappings[action as keyof typeof systemMappings];
+    const mapping = systemMap.mappings[action as keyof typeof systemMap.mappings];
     return mapping || null;
   };
 
   const getConfidenceLevel = (confidence: number): { range: [number, number]; gesture_modifier: string } | null => {
-    for (const [level, config] of Object.entries(confidenceLevels)) {
+    for (const [level, config] of Object.entries(intentMap.confidence_levels)) {
       const [min, max] = config.range;
       if (confidence >= min && confidence <= max) {
         return config;
@@ -45,9 +40,9 @@ export function useIntentMap() {
     getIntentMapping,
     getSystemMapping,
     getConfidenceLevel,
-    intentMappings,
-    systemMappings,
-    confidenceLevels,
+    intentMappings: intentMap.mappings,
+    systemMappings: systemMap.mappings,
+    confidenceLevels: intentMap.confidence_levels,
   };
 }
 

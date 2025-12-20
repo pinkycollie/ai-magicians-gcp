@@ -1,0 +1,14 @@
+{
+  "state": "warning",
+  "visual": {
+    "animation": "caution-alert",
+    "motion": "hand-palm-up-warning",
+    "intensity": "high"
+  },
+  "semantics": {
+    "meaning": "caution-attention",
+    "gesture": "open-palm-warning",
+    "expression": "concerned-alert"
+  },
+  "description": "System requires caution or attention"
+}
