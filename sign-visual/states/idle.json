@@ -1,0 +1,14 @@
+{
+  "state": "idle",
+  "visual": {
+    "animation": "relaxed-neutral",
+    "motion": "subtle-breathing",
+    "intensity": "low"
+  },
+  "semantics": {
+    "meaning": "ready-and-waiting",
+    "gesture": "open-hands-rest",
+    "expression": "calm-attentive"
+  },
+  "description": "System is ready, waiting for input"
+}

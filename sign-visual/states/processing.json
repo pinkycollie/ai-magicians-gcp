@@ -1,0 +1,14 @@
+{
+  "state": "processing",
+  "visual": {
+    "animation": "thinking-motion",
+    "motion": "hand-to-chin-circular",
+    "intensity": "medium-high"
+  },
+  "semantics": {
+    "meaning": "analyzing-thinking",
+    "gesture": "index-finger-circle-temple",
+    "expression": "concentrated-engaged"
+  },
+  "description": "System is processing information"
+}

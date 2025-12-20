@@ -1,0 +1,14 @@
+{
+  "state": "executing",
+  "visual": {
+    "animation": "action-motion",
+    "motion": "hands-moving-forward",
+    "intensity": "high"
+  },
+  "semantics": {
+    "meaning": "doing-acting",
+    "gesture": "forward-motion-hands",
+    "expression": "determined-active"
+  },
+  "description": "System is executing an action"
+}

@@ -1,0 +1,62 @@
+{
+  "mappings": {
+    "ask_question": {
+      "semantic": "query-information",
+      "gesture": "questioning-expression",
+      "priority": "high"
+    },
+    "provide_information": {
+      "semantic": "sharing-knowledge",
+      "gesture": "open-hands-presenting",
+      "priority": "high"
+    },
+    "request_action": {
+      "semantic": "asking-for-help",
+      "gesture": "beckoning-forward",
+      "priority": "high"
+    },
+    "express_concern": {
+      "semantic": "worried-uncertain",
+      "gesture": "furrowed-brow-hesitation",
+      "priority": "medium"
+    },
+    "confirm_understanding": {
+      "semantic": "agreement-yes",
+      "gesture": "nodding-affirmative",
+      "priority": "medium"
+    },
+    "express_confusion": {
+      "semantic": "unclear-confused",
+      "gesture": "shrugging-questioning",
+      "priority": "medium"
+    },
+    "cancel_action": {
+      "semantic": "stop-cancel",
+      "gesture": "waving-off-stop",
+      "priority": "high"
+    },
+    "approve_action": {
+      "semantic": "accept-proceed",
+      "gesture": "thumbs-up-go",
+      "priority": "high"
+    }
+  },
+  "confidence_levels": {
+    "certain": {
+      "range": [0.9, 1.0],
+      "gesture_modifier": "firm-decisive"
+    },
+    "confident": {
+      "range": [0.7, 0.9],
+      "gesture_modifier": "steady-clear"
+    },
+    "uncertain": {
+      "range": [0.5, 0.7],
+      "gesture_modifier": "tentative-hesitant"
+    },
+    "confused": {
+      "range": [0.0, 0.5],
+      "gesture_modifier": "questioning-unclear"
+    }
+  }
+}

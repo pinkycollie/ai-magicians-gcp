@@ -1,0 +1,14 @@
+{
+  "state": "completed",
+  "visual": {
+    "animation": "success-confirmation",
+    "motion": "thumbs-up-nod",
+    "intensity": "medium"
+  },
+  "semantics": {
+    "meaning": "finished-success",
+    "gesture": "thumbs-up-done",
+    "expression": "satisfied-complete"
+  },
+  "description": "System has completed the task successfully"
+}

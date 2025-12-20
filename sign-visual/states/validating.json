@@ -1,0 +1,14 @@
+{
+  "state": "validating",
+  "visual": {
+    "animation": "checking-verification",
+    "motion": "hands-weighing-balance",
+    "intensity": "medium"
+  },
+  "semantics": {
+    "meaning": "verifying-checking",
+    "gesture": "alternating-hands-balance",
+    "expression": "careful-deliberate"
+  },
+  "description": "System is validating information or decisions"
+}

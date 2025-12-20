@@ -1,0 +1,14 @@
+{
+  "state": "listening",
+  "visual": {
+    "animation": "attentive-focus",
+    "motion": "head-tilt-forward",
+    "intensity": "medium"
+  },
+  "semantics": {
+    "meaning": "receiving-input",
+    "gesture": "cupped-hand-to-ear",
+    "expression": "focused-receptive"
+  },
+  "description": "System is actively receiving user input"
+}
