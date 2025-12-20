@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send, Bot, User, Loader2, Zap } from "lucide-react"
 import { useEffect, useRef } from "react"
+import { stateMachine } from "@/sign-visual/engine/stateMachine"
 
 interface ChatInterfaceProps {
   selectedAgent: string
@@ -29,6 +30,62 @@ export default function ChatInterface({ selectedAgent }: ChatInterfaceProps) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
     }
   }, [messages])
+
+  // Emit state changes based on chat activity
+  useEffect(() => {
+    if (isLoading) {
+      stateMachine.emit({
+        actor: "MagicianCore",
+        state: "processing",
+        confidence: 0.85,
+        requiresUser: false,
+        message: "Agent is thinking...",
+      })
+    } else if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1]
+      if (lastMessage.role === "assistant") {
+        stateMachine.emit({
+          actor: "MagicianCore",
+          state: "completed",
+          confidence: 0.95,
+          requiresUser: false,
+          message: "Response ready",
+        })
+      }
+    } else {
+      stateMachine.emit({
+        actor: "System",
+        state: "idle",
+        requiresUser: false,
+        message: "Ready for input",
+      })
+    }
+  }, [isLoading, messages])
+
+  // Handle input changes - emit listening state
+  const handleInputChangeWithState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e)
+    if (e.target.value.length > 0) {
+      stateMachine.emit({
+        actor: "User",
+        state: "listening",
+        requiresUser: false,
+        message: "Listening to your input...",
+      })
+    }
+  }
+
+  // Handle form submission - emit executing state
+  const handleSubmitWithState = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit(e)
+    stateMachine.emit({
+      actor: "MagicianCore",
+      state: "executing",
+      confidence: 0.8,
+      requiresUser: false,
+      message: "Sending to agent...",
+    })
+  }
 
   const getAgentInfo = (agentId: string) => {
     const agentMap: Record<string, { name: string; description: string; color: string }> = {
@@ -198,10 +255,10 @@ export default function ChatInterface({ selectedAgent }: ChatInterfaceProps) {
         </ScrollArea>
 
         <div className="p-4 border-t">
-          <form onSubmit={handleSubmit} className="flex gap-2">
+          <form onSubmit={handleSubmitWithState} className="flex gap-2">
             <Input
               value={input}
-              onChange={handleInputChange}
+              onChange={handleInputChangeWithState}
               placeholder={`Ask ${agentInfo.name} for assistance...`}
               disabled={isLoading}
               className="flex-1"

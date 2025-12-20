@@ -7,9 +7,28 @@
 
 This is the **360 Magicians Vertical AI Platform** - a federated AI worker system designed to make digital experiences accessible to 70+ million deaf people worldwide. The platform has been converted to be fully compatible with **Google AI Studio** and uses the **Gemini SDK**.
 
+## Revolutionary Sign Language Visual System
+
+This platform features a **groundbreaking sign language visual system** that treats sign language as a **primary interaction channel**, not an accessibility afterthought.
+
+### Core Philosophy
+
+> **If the system thinks, it signs.**  
+> **If it cannot sign, it should not act.**
+
+The sign visual system provides:
+- **Real-time state visualization** - See what the AI is thinking through sign language
+- **Persistent signer panel** - Always visible, dockable, resizable
+- **State-based signing** - Different visual modes for listening, processing, deciding, executing, errors
+- **Confidence indicators** - Visual representation of AI certainty
+- **Semantic communication** - Intent and meaning, not word-for-word translation
+
+📖 See [sign-visual-system.md](./sign-visual-system.md) for complete documentation.
+
 ### Key Features
 
 - **12 Specialized AI Agents** across 3 categories (Job Development, Business Development, Integration Hub)
+- **Sign Language as Primary UX** - Visual state representation through sign language semantics
 - **Google AI Studio Compatible** - Runs entirely in the browser with no server-side components
 - **Gemini AI Integration** - Powered by Google's Gemini Pro model
 - **Accessibility-First Design** - Built specifically for the deaf and hard-of-hearing community
@@ -155,6 +174,56 @@ The original Next.js implementation is preserved in the `app/`, `components/`, a
 - **$26.2B** Market opportunity
 - **12** Federated AI agents
 - **6** Industry verticals covered
+
+## Sign Visual System Architecture
+
+The platform includes a comprehensive sign language visual system that makes AI cognition visible through sign semantics.
+
+### Components
+
+- **State Machine** - Single source of truth for agent state
+- **Event Bus** - Real-time state change broadcasting
+- **SignerPanel** - Persistent, dockable sign language visualization
+- **State Indicators** - Visual representation of system states
+- **Confidence Cues** - Visual representation of AI certainty levels
+
+### States
+
+- 🔵 **Idle** - Ready and waiting
+- 👂 **Listening** - Receiving input
+- 🤔 **Processing** - Analyzing/thinking
+- ✓ **Validating** - Checking/verifying
+- ⚖️ **Deciding** - Making decisions
+- ⚡ **Executing** - Taking action
+- ✅ **Completed** - Task finished
+- ❌ **Error** - Problem encountered
+- ⚠️ **Warning** - Caution required
+
+### Integration
+
+Every component emits state changes:
+
+```typescript
+import { stateMachine } from "@/sign-visual/engine/stateMachine"
+
+// Emit state when agent processes
+stateMachine.emit({
+  actor: "MagicianCore",
+  state: "processing",
+  confidence: 0.85,
+  requiresUser: false,
+  message: "Analyzing your request..."
+})
+```
+
+The SignerPanel automatically visualizes these states in real-time.
+
+## Documentation
+
+- **`sign-visual-system.md`** - Complete sign visual system specification
+- **`IMPLEMENTATION_PLAN.md`** - Implementation roadmap and architecture
+- **`AI_STUDIO_README.md`** - Complete AI Studio setup guide
+- **`metadata.json`** - App metadata and permissions
 
 ## License
 
