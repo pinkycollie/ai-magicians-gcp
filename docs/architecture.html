@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Architecture - 360 Magicians</title>
+  
+  <!-- Mermaid.js for diagrams -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#667eea',
+        primaryTextColor: '#fff',
+        primaryBorderColor: '#5568d3',
+        lineColor: '#764ba2',
+        secondaryColor: '#f7f9fc',
+        tertiaryColor: '#e8ecf9'
+      }
+    });
+  </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e3e9f0 100%);
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .nav-links {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .diagram-section {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .diagram-section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .diagram-section p {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .diagram-container {
+      overflow-x: auto;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .diagram-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏗️ System Architecture</h1>
+      <p style="color: #666; font-size: 1.1rem;">Comprehensive technical diagrams and workflows for the 360 Magicians platform</p>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">← Back to Home</a>
+        <a href="https://github.com/pinkycollie/ai-magicians-gcp" class="nav-link" target="_blank">GitHub Repository</a>
+      </div>
+    </div>
+
+    <!-- High-Level Architecture -->
+    <div class="diagram-section">
+      <h2>High-Level Platform Architecture</h2>
+      <p>The 360 Magicians platform consists of multiple layers working together to provide accessible AI services to the deaf community.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "User Interface Layer"
+        Web[Web Application<br/>HTML/JS/CSS]
+        Mobile[Mobile Responsive]
+        Accessibility[Accessibility Controls]
+    end
+    
+    subgraph "Application Layer"
+        Router[Request Router]
+        AgentManager[Agent Manager]
+        
+        subgraph "12 AI Agents"
+            JobAgents[Job Development<br/>4 Agents]
+            BizAgents[Business Development<br/>4 Agents]
+            IntegAgents[Integration Hub<br/>4 Agents]
+        end
+    end
+    
+    subgraph "AI Service Layer"
+        GeminiSDK[Gemini AI SDK]
+        ContextManager[Context Manager]
+        PromptEngine[Prompt Engine]
+    end
+    
+    subgraph "VR4DEAF Integration"
+        DeafAuth[DeafAUTH<br/>Authentication & SSO]
+        Fibonrose[FIBONROSE<br/>Trust System]
+        PinkSync[PinkSync<br/>Visual Dashboard]
+    end
+    
+    subgraph "Backend Services"
+        API[API Gateway<br/>mbtq.dev]
+        Analytics[Analytics Engine]
+        Database[(User Data<br/>& Profiles)]
+    end
+    
+    Web --> Router
+    Mobile --> Router
+    Accessibility --> Router
+    
+    Router --> AgentManager
+    AgentManager --> JobAgents
+    AgentManager --> BizAgents
+    AgentManager --> IntegAgents
+    
+    JobAgents --> GeminiSDK
+    BizAgents --> GeminiSDK
+    IntegAgents --> GeminiSDK
+    
+    GeminiSDK --> ContextManager
+    ContextManager --> PromptEngine
+    
+    AgentManager --> DeafAuth
+    AgentManager --> Fibonrose
+    AgentManager --> PinkSync
+    
+    DeafAuth --> API
+    Fibonrose --> API
+    PinkSync --> API
+    API --> Analytics
+    API --> Database
+    
+    style Web fill:#667eea,stroke:#5568d3,color:#fff
+    style GeminiSDK fill:#764ba2,stroke:#5568d3,color:#fff
+    style DeafAuth fill:#1e7e34,stroke:#166a2a,color:#fff
+    style API fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Flow -->
+    <div class="diagram-section">
+      <h2>User Interaction Data Flow</h2>
+      <p>Complete flow of a user interaction from request to response, including all system components and integrations.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+sequenceDiagram
+    actor User as Deaf User
+    participant UI as Web Interface
+    participant Auth as DeafAUTH
+    participant Router as Request Router
+    participant Agent as AI Agent
+    participant Gemini as Gemini AI
+    participant VR4D as VR4DEAF Platform
+    participant Analytics as Analytics Engine
+    
+    User->>UI: Access Platform
+    UI->>Auth: Authenticate User
+    Auth->>Auth: Verify Credentials
+    Auth->>UI: Return Session + Accommodations
+    
+    User->>UI: Select Agent & Send Query
+    UI->>Router: Route Request
+    Router->>Agent: Initialize Agent with Context
+    
+    Agent->>VR4D: Fetch User Profile
+    VR4D->>Agent: Return Accessibility Preferences
+    
+    Agent->>Gemini: Process Query with Context
+    Gemini->>Agent: Generate AI Response
+    
+    Agent->>VR4D: Apply Accommodations
+    VR4D->>Agent: Enhanced Response
+    
+    Agent->>Analytics: Log Interaction
+    Agent->>UI: Return Final Response
+    UI->>User: Display with Accessibility Features
+    
+    Note over User,Analytics: All steps respect<br/>deaf accessibility requirements
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Architecture -->
+    <div class="diagram-section">
+      <h2>AI Agent Internal Architecture</h2>
+      <p>How each AI agent processes requests with specialized context and accessibility considerations.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "Agent Input Processing"
+        Input[User Input]
+        Preprocessor[Input Preprocessor]
+        ContextLoader[Context Loader]
+    end
+    
+    subgraph "Agent Core"
+        SystemPrompt[System Prompt<br/>Agent Specialization]
+        ContextBuilder[Context Builder]
+        PromptConstructor[Prompt Constructor]
+    end
+    
+    subgraph "AI Processing"
+        GeminiAPI[Gemini AI API]
+        ResponseParser[Response Parser]
+        ErrorHandler[Error Handler]
+    end
+    
+    subgraph "Accessibility Layer"
+        AccomChecker[Accommodation Checker]
+        VisualEnhancer[Visual Enhancer]
+        ASLAdapter[ASL Adapter]
+    end
+    
+    subgraph "Output Processing"
+        Formatter[Response Formatter]
+        Validator[Output Validator]
+        FinalResponse[Final Response]
+    end
+    
+    Input --> Preprocessor
+    Preprocessor --> ContextLoader
+    ContextLoader --> SystemPrompt
+    
+    SystemPrompt --> ContextBuilder
+    ContextBuilder --> PromptConstructor
+    PromptConstructor --> GeminiAPI
+    
+    GeminiAPI --> ResponseParser
+    GeminiAPI --> ErrorHandler
+    ResponseParser --> AccomChecker
+    
+    AccomChecker --> VisualEnhancer
+    VisualEnhancer --> ASLAdapter
+    ASLAdapter --> Formatter
+    
+    Formatter --> Validator
+    Validator --> FinalResponse
+    
+    ErrorHandler -.->|Retry| GeminiAPI
+    
+    style Input fill:#667eea,stroke:#5568d3,color:#fff
+    style GeminiAPI fill:#764ba2,stroke:#5568d3,color:#fff
+    style AccomChecker fill:#1e7e34,stroke:#166a2a,color:#fff
+    style FinalResponse fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- VR4DEAF Integration -->
+    <div class="diagram-section">
+      <h2>VR4DEAF Platform Integration</h2>
+      <p>Detailed integration architecture showing how DeafAUTH, FIBONROSE, and PinkSync work together.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "Entry Points"
+        UserLogin[User Login]
+        EmployerLogin[Employer Login]
+        PartnerLogin[Partner Login]
+    end
+    
+    subgraph "DeafAUTH - Authentication Layer"
+        SSO[Single Sign-On]
+        Biometric[Biometric Auth]
+        AccomEngine[Accommodation Engine]
+        SessionMgr[Session Manager]
+    end
+    
+    subgraph "FIBONROSE - Trust & Validation"
+        SkillsDB[(Skills Database)]
+        TrustAlgo[Fibonacci Trust Algorithm]
+        Validation[Community Validation]
+        Scoring[Trust Score Calculator]
+    end
+    
+    subgraph "PinkSync - Accessibility Layer"
+        Dashboard[Visual Dashboard]
+        Progress[Progress Tracker]
+        CommTools[Communication Tools]
+        Notifications[Visual Notifications]
+    end
+    
+    subgraph "Integration Points"
+        AgentAPI[AI Agent API]
+        DataSync[Data Synchronization]
+        EventBus[Event Bus]
+    end
+    
+    UserLogin --> SSO
+    EmployerLogin --> SSO
+    PartnerLogin --> SSO
+    
+    SSO --> Biometric
+    Biometric --> AccomEngine
+    AccomEngine --> SessionMgr
+    
+    SessionMgr --> TrustAlgo
+    SessionMgr --> Dashboard
+    
+    TrustAlgo --> SkillsDB
+    TrustAlgo --> Validation
+    Validation --> Scoring
+    
+    Dashboard --> Progress
+    Dashboard --> CommTools
+    CommTools --> Notifications
+    
+    Scoring --> AgentAPI
+    Dashboard --> AgentAPI
+    AccomEngine --> AgentAPI
+    
+    AgentAPI --> DataSync
+    DataSync --> EventBus
+    
+    style SSO fill:#1e7e34,stroke:#166a2a,color:#fff
+    style TrustAlgo fill:#764ba2,stroke:#5568d3,color:#fff
+    style Dashboard fill:#667eea,stroke:#5568d3,color:#fff
+    style AgentAPI fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- Domain Strategy -->
+    <div class="diagram-section">
+      <h2>Multi-Domain Architecture Strategy</h2>
+      <p>How different domains serve specific purposes in the ecosystem while maintaining unified accessibility.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "Production Domain - 360magicians.com"
+        MainUI[User Interface]
+        EnterpriseSales[Enterprise Sales Portal]
+        CommunityHub[Community Hub]
+        Marketing[Marketing Pages]
+    end
+    
+    subgraph "API Domain - mbtq.dev"
+        APIGateway[API Gateway]
+        DevDocs[Developer Documentation]
+        SDKs[SDK Downloads]
+        Staging[Staging Environment]
+    end
+    
+    subgraph "Auth Domain - deafauth.mbtq.dev"
+        AuthService[Authentication Service]
+        TokenMgr[Token Manager]
+        AccomService[Accommodation Service]
+        UserProfile[User Profile API]
+    end
+    
+    subgraph "Shared Infrastructure"
+        LoadBalancer[Load Balancer]
+        CDN[Content Delivery Network]
+        Database[(Shared Database)]
+        Cache[(Redis Cache)]
+    end
+    
+    subgraph "External Integrations"
+        GitHub[GitHub Pages]
+        AIStudio[Google AI Studio]
+        CloudRun[Cloud Run]
+    end
+    
+    MainUI --> APIGateway
+    EnterpriseSales --> APIGateway
+    CommunityHub --> APIGateway
+    
+    APIGateway --> AuthService
+    DevDocs --> APIGateway
+    Staging --> APIGateway
+    
+    AuthService --> TokenMgr
+    TokenMgr --> AccomService
+    AccomService --> UserProfile
+    
+    MainUI --> LoadBalancer
+    APIGateway --> LoadBalancer
+    AuthService --> LoadBalancer
+    
+    LoadBalancer --> CDN
+    LoadBalancer --> Database
+    LoadBalancer --> Cache
+    
+    MainUI -.->|Documentation| GitHub
+    APIGateway -.->|Development| AIStudio
+    MainUI -.->|Production| CloudRun
+    
+    style MainUI fill:#667eea,stroke:#5568d3,color:#fff
+    style APIGateway fill:#764ba2,stroke:#5568d3,color:#fff
+    style AuthService fill:#1e7e34,stroke:#166a2a,color:#fff
+    style Database fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- Deployment Pipeline -->
+    <div class="diagram-section">
+      <h2>Deployment & CI/CD Pipeline</h2>
+      <p>Automated deployment workflow from development to production with multiple deployment targets.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph LR
+    subgraph "Development"
+        Dev[Developer]
+        LocalTest[Local Testing]
+    end
+    
+    subgraph "Version Control"
+        Git[Git Repository]
+        PR[Pull Request]
+        Review[Code Review]
+    end
+    
+    subgraph "CI Pipeline"
+        GHActions[GitHub Actions]
+        Lint[Lint & Format]
+        Build[Build Process]
+        Test[Automated Tests]
+    end
+    
+    subgraph "Deployment Targets"
+        Pages[GitHub Pages<br/>Documentation]
+        Studio[AI Studio<br/>Development]
+        CloudRunProd[Cloud Run<br/>Production]
+    end
+    
+    subgraph "Monitoring"
+        Analytics[Analytics]
+        Logs[Error Logs]
+        Alerts[Alert System]
+    end
+    
+    Dev --> LocalTest
+    LocalTest --> Git
+    Git --> PR
+    PR --> Review
+    
+    Review --> GHActions
+    GHActions --> Lint
+    Lint --> Build
+    Build --> Test
+    
+    Test -->|Docs| Pages
+    Test -->|Development| Studio
+    Test -->|Production| CloudRunProd
+    
+    Pages --> Analytics
+    Studio --> Analytics
+    CloudRunProd --> Analytics
+    
+    Analytics --> Logs
+    Logs --> Alerts
+    Alerts -.->|Notify| Dev
+    
+    style Dev fill:#667eea,stroke:#5568d3,color:#fff
+    style GHActions fill:#764ba2,stroke:#5568d3,color:#fff
+    style CloudRunProd fill:#1e7e34,stroke:#166a2a,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="diagram-section">
+      <h2>Complete Technology Stack</h2>
+      <p>All technologies, frameworks, and services used across the platform.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "Frontend Technologies"
+        HTML5[HTML5]
+        CSS3[CSS3<br/>+ Gradients & Animations]
+        ES6[JavaScript ES6+]
+        ESModules[ES Modules]
+        ImportMaps[Import Maps]
+    end
+    
+    subgraph "AI & ML Services"
+        GeminiSDK[Google Gemini SDK<br/>v0.2.1]
+        AIStudioAPI[AI Studio API]
+        NaturalLang[Natural Language Processing]
+    end
+    
+    subgraph "CDN & Libraries"
+        ESMSH[esm.sh CDN]
+        Mermaid[Mermaid.js<br/>Diagrams]
+        WebAPIs[Browser Web APIs]
+    end
+    
+    subgraph "Deployment Platforms"
+        GitHubPages[GitHub Pages]
+        GoogleCloud[Google Cloud Run]
+        VercelPlatform[Vercel]
+        AIStudioPlatform[Google AI Studio]
+    end
+    
+    subgraph "Backend Services"
+        NodeJS[Node.js Runtime]
+        RestAPI[REST APIs]
+        WebSocket[WebSocket<br/>Real-time]
+    end
+    
+    subgraph "Authentication & Security"
+        DeafAuthSvc[DeafAUTH Service]
+        JWT[JWT Tokens]
+        HTTPS[HTTPS/TLS]
+        CORS[CORS Policies]
+    end
+    
+    subgraph "Data & Storage"
+        PostgreSQL[(PostgreSQL)]
+        Redis[(Redis Cache)]
+        CloudStorage[Cloud Storage]
+    end
+    
+    HTML5 --> ES6
+    CSS3 --> ES6
+    ES6 --> ESModules
+    ESModules --> ImportMaps
+    ImportMaps --> ESMSH
+    
+    ES6 --> GeminiSDK
+    GeminiSDK --> AIStudioAPI
+    AIStudioAPI --> NaturalLang
+    
+    ESMSH --> Mermaid
+    ES6 --> WebAPIs
+    
+    ESModules --> GitHubPages
+    ESModules --> GoogleCloud
+    ESModules --> VercelPlatform
+    ESModules --> AIStudioPlatform
+    
+    GoogleCloud --> NodeJS
+    NodeJS --> RestAPI
+    NodeJS --> WebSocket
+    
+    RestAPI --> DeafAuthSvc
+    DeafAuthSvc --> JWT
+    RestAPI --> HTTPS
+    HTTPS --> CORS
+    
+    RestAPI --> PostgreSQL
+    RestAPI --> Redis
+    RestAPI --> CloudStorage
+    
+    style HTML5 fill:#667eea,stroke:#5568d3,color:#fff
+    style GeminiSDK fill:#764ba2,stroke:#5568d3,color:#fff
+    style DeafAuthSvc fill:#1e7e34,stroke:#166a2a,color:#fff
+    style GitHubPages fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Architecture -->
+    <div class="diagram-section">
+      <h2>Security & Privacy Architecture</h2>
+      <p>Comprehensive security measures protecting user data and ensuring compliance with accessibility standards.</p>
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    subgraph "External Layer"
+        User[User Request]
+        Firewall[Cloud Firewall]
+        DDoS[DDoS Protection]
+    end
+    
+    subgraph "Authentication Layer"
+        SSO[Single Sign-On]
+        MFA[Multi-Factor Auth]
+        Biometric[Biometric Verification]
+        TokenValidation[Token Validation]
+    end
+    
+    subgraph "Authorization Layer"
+        RBAC[Role-Based Access Control]
+        AccomPermissions[Accommodation Permissions]
+        APIKeys[API Key Management]
+    end
+    
+    subgraph "Data Protection"
+        Encryption[End-to-End Encryption]
+        DataMasking[Data Masking]
+        SecureStorage[Secure Storage]
+    end
+    
+    subgraph "Compliance"
+        ADA[ADA Compliance]
+        WCAG[WCAG 2.1 Standards]
+        GDPR[GDPR Compliance]
+        HIPAA[HIPAA Ready]
+    end
+    
+    subgraph "Monitoring"
+        SecurityLogs[Security Logs]
+        AuditTrail[Audit Trail]
+        Alerts[Security Alerts]
+    end
+    
+    User --> Firewall
+    Firewall --> DDoS
+    DDoS --> SSO
+    
+    SSO --> MFA
+    MFA --> Biometric
+    Biometric --> TokenValidation
+    
+    TokenValidation --> RBAC
+    RBAC --> AccomPermissions
+    AccomPermissions --> APIKeys
+    
+    APIKeys --> Encryption
+    Encryption --> DataMasking
+    DataMasking --> SecureStorage
+    
+    SecureStorage --> ADA
+    SecureStorage --> WCAG
+    SecureStorage --> GDPR
+    SecureStorage --> HIPAA
+    
+    RBAC --> SecurityLogs
+    Encryption --> SecurityLogs
+    SecurityLogs --> AuditTrail
+    AuditTrail --> Alerts
+    
+    style User fill:#667eea,stroke:#5568d3,color:#fff
+    style Encryption fill:#1e7e34,stroke:#166a2a,color:#fff
+    style ADA fill:#764ba2,stroke:#5568d3,color:#fff
+    style Alerts fill:#667eea,stroke:#5568d3,color:#fff
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
